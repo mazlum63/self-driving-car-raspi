@@ -1,0 +1,30 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+body {
+    margin: 0;
+    background: #ccc;
+}
+
+canvas {
+    display: block;
+    background: #665235;
+    margin: auto;
+}
+
+.btn-container {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  margin-bottom: 10px;
+  display: inline;
+  max-width: 50px;
+}
