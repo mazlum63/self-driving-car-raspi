@@ -63,11 +63,16 @@ export class Sensor {
       context.stroke();
 
       context.beginPath();
+      context.arc(endPoint!.x, endPoint!.y, 1, 0, Math.PI * 2);
+      context.strokeStyle = "green";
+      context.stroke();
+
+      /* context.beginPath();
       context.lineWidth = 2;
       context.strokeStyle = "black";
       context.moveTo(this.rays[i][1].x, this.rays[i][1].y);
       context.lineTo(endPoint!.x, endPoint!.y);
-      context.stroke();
+      context.stroke(); */
     }
   }
 

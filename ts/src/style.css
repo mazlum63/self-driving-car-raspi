@@ -26,5 +26,6 @@ button {
   border: none;
   margin-bottom: 10px;
   display: inline;
-  max-width: 50px;
+  max-width: 70px;
+  font-size: 2rem;
 }

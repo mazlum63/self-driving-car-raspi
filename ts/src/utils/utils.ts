@@ -50,12 +50,11 @@ export function polysIntersect(poly1: Coordinate[], poly2: Coordinate[]) {
 }
 
 export function createEntity(
-  event: MouseEvent,
+  x: number,
+  y: number,
   terrain: Terrain,
   entities: Entity[]
 ) {
-  const x = event.offsetX;
-  const y = event.offsetY;
   const width = Math.floor(lerp(100, 20, Math.random()));
   const height = Math.floor(lerp(100, 20, Math.random()));
   const maxSize = Math.hypot(width, height) / 2;
@@ -80,7 +79,7 @@ export function saveCar(event: PointerEvent, cars: Car[]) {
         car.polygon[(i + 1) % car.polygon.length]
       );
       if (touch) {
-        localStorage.setItem("savedCar", car.x.toString());
+        localStorage.setItem("savedCar", JSON.stringify(car.brain));
       }
     }
   }

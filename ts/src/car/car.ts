@@ -3,6 +3,7 @@ import { Movement } from "./movement.js";
 import { Sensor } from "./sensor.js";
 import { Terrain } from "../terrain/terrain.js";
 import { Entity } from "../terrain/entity.js";
+import { NeuralNetwork } from "../neuralnetwork.js";
 
 export class Car extends Entity {
   angle = 0;
@@ -16,11 +17,14 @@ export class Car extends Entity {
 
   speed: number = 0;
   sensor: Sensor;
+  brain?: NeuralNetwork;
   movement: Movement;
   constructor(x: number, y: number, terrain: Terrain, isUser: boolean = false) {
     super(terrain, x, y, 30, 30, 0);
     this.sensor = new Sensor(this);
-
+    if (!isUser) {
+      this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
+    }
     this.movement = new Movement(isUser);
     this.terrain = terrain;
   }
@@ -32,47 +36,43 @@ export class Car extends Entity {
   ) {
     this.move();
     this.sensor.update(terrainBorders, cars, entities);
+    let offset = this.sensor.readings.map((r) =>
+      r == null ? 0 : 1 - r.offset
+    );
+
+    if (this.brain) {
+      const outputs = NeuralNetwork.feedForward(offset, this.brain);
+      this.movement.forward = outputs[0];
+      this.movement.left = outputs[1];
+      this.movement.right = outputs[2];
+      this.movement.reverse = outputs[3];
+    }
     super.update(terrainBorders, cars, entities);
   }
 
   private move() {
-    let leftPower = 0;
-    let rightPower = 0;
+    this.leftSpeed = 0;
+    this.rightSpeed = 0;
 
     if (this.movement.forward) {
-      leftPower -= this.acceleration;
-      rightPower -= this.acceleration;
+      this.leftSpeed = -this.maxSpeed;
+      this.rightSpeed = -this.maxSpeed;
     }
 
     if (this.movement.reverse) {
-      leftPower += this.acceleration;
-      rightPower += this.acceleration;
+      this.leftSpeed = this.maxSpeed;
+      this.rightSpeed = this.maxSpeed;
     }
 
     if (this.movement.left) {
-      leftPower -= this.turnFactor;
-      rightPower += this.turnFactor;
+      this.leftSpeed = 0;
+      this.rightSpeed = this.maxSpeed;
     }
 
     if (this.movement.right) {
-      leftPower += this.turnFactor;
-      rightPower -= this.turnFactor;
+      this.leftSpeed = this.maxSpeed;
+      this.rightSpeed = 0;
     }
-
-    this.leftSpeed += leftPower;
-    this.rightSpeed += rightPower;
-
-    this.leftSpeed *= 1 - this.friction;
-    this.rightSpeed *= 1 - this.friction;
-
-    this.leftSpeed = Math.max(
-      -this.maxSpeed,
-      Math.min(this.maxSpeed, this.leftSpeed)
-    );
-    this.rightSpeed = Math.max(
-      -this.maxSpeed,
-      Math.min(this.maxSpeed, this.rightSpeed)
-    );
 
     const speed = (this.leftSpeed + this.rightSpeed) / 2;
     const rotation = (this.rightSpeed - this.leftSpeed) / this.wheelBase;
@@ -92,7 +92,10 @@ export class Car extends Entity {
     }
   }
   override draw(context: CanvasRenderingContext2D) {
-    this.sensor.draw(context);
+    if (!this.brain) {
+      this.sensor.draw(context);
+    }
+    context.fillStyle="red"
     super.draw(context);
   }
 }

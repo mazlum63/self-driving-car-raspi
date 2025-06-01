@@ -2,36 +2,47 @@ import "./style.css";
 import { Car } from "./car/car.js";
 import { Terrain } from "./terrain/terrain.js";
 import { Entity } from "./terrain/entity.js";
-import { createEntity, saveCar } from "./utils/utils.js";
+import { createEntity, lerp, saveCar } from "./utils/utils.js";
+import { NeuralNetwork } from "./neuralnetwork.js";
 
 const canvas = document.getElementById("simCanvas") as HTMLCanvasElement;
 const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
 const pauseBtn = document.getElementById("pause");
+const deleteBtn = document.getElementById("delete");
 let isRunning: boolean = true;
 var animationId: number;
 
 const terrain = new Terrain(canvas.width, canvas.height);
 let cars: Car[] = [];
-const car = new Car(500, 500, terrain, true);
-//const car2 = new Car(500, 500, terrain, false);
-cars.push(car);
-//cars.push(car2);
+const userCar = new Car(500, 500, terrain, true);
+cars.push(userCar);
+
+for (let i = 0; i < 100; i++) {
+  let newCar = new Car(canvas.width / 2, canvas.height / 2, terrain, false);
+  const bestBrain = window.localStorage.getItem("savedCar");
+  if (bestBrain) {
+    newCar.brain = JSON.parse(bestBrain);
+  }
+  NeuralNetwork.mutate(newCar.brain!, 0.1);
+  cars.push(newCar);
+}
 
 const entities: Entity[] = [];
-for (let i = 0; i < 10; i++) {
-  const newEntity = new Entity(terrain);
-  entities.push(newEntity);
+for (let i = 0; i < 5; i++) {
+  createEntity(lerp(terrain.width-terrain.distance, terrain.distance, Math.random()),lerp(terrain.height-terrain.distance, terrain.distance, Math.random()), terrain, entities);
 }
+
 animate();
 
 function animate() {
+  console.log(cars.length);
   if (!isRunning) return;
   context.clearRect(0, 0, canvas.width, canvas.height);
   terrain.draw(context);
-  //cars = cars.filter((c) => !c.touched);
-  cars.forEach((a) => {
-    a.update(terrain.borders, cars, entities);
-    a.draw(context);
+  cars = cars.filter((c) => !c.touched || !c.brain);
+  cars.forEach((car) => {
+    car.update(terrain.borders, [], entities);
+    car.draw(context);
   });
   entities.forEach((f) => {
     f.update(terrain.borders, cars, []);
@@ -41,7 +52,9 @@ function animate() {
 }
 
 canvas.addEventListener("click", function (event: MouseEvent) {
-  createEntity(event, terrain, entities);
+  const x = event.offsetX;
+  const y = event.offsetY;
+  createEntity(x, y, terrain, entities);
 });
 
 canvas.addEventListener("contextmenu", function (event: PointerEvent) {
@@ -57,4 +70,8 @@ pauseBtn!.addEventListener("click", () => {
   } else {
     pauseBtn!.innerHTML = "▶️";
   }
+});
+
+deleteBtn!.addEventListener("click", () => {
+  window.localStorage.removeItem("savedCar");
 });
