@@ -3,6 +3,7 @@ import { Entity } from "../terrain/entity";
 import type { Terrain } from "../terrain/terrain";
 import type { Car } from "../car/car";
 
+
 export function lerp(A: number, B: number, t: number) {
   return A + (B - A) * t;
 }
@@ -80,7 +81,21 @@ export function saveCar(event: PointerEvent, cars: Car[]) {
       );
       if (touch) {
         localStorage.setItem("savedCar", JSON.stringify(car.brain));
+        downloadJsonFile(car.brain, "bestBrain");
       }
     }
   }
+}
+
+function downloadJsonFile(data: any, filename: string) {
+  const jsonString = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonString], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(url);
 }

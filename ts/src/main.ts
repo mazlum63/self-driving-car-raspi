@@ -17,18 +17,18 @@ let cars: Car[] = [];
 const userCar = new Car(500, 500, terrain, true);
 cars.push(userCar);
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 1; i++) {
   let newCar = new Car(canvas.width / 2, canvas.height / 2, terrain, false);
   const bestBrain = window.localStorage.getItem("savedCar");
   if (bestBrain) {
     newCar.brain = JSON.parse(bestBrain);
   }
-  NeuralNetwork.mutate(newCar.brain!, 0.1);
+  //NeuralNetwork.mutate(newCar.brain!, 0.1);
   cars.push(newCar);
 }
 
 const entities: Entity[] = [];
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 20; i++) {
   createEntity(lerp(terrain.width-terrain.distance, terrain.distance, Math.random()),lerp(terrain.height-terrain.distance, terrain.distance, Math.random()), terrain, entities);
 }
 

@@ -9,10 +9,7 @@ export class Car extends Entity {
   angle = 0;
   leftSpeed = 0;
   rightSpeed = 0;
-  maxSpeed = 3;
-  acceleration = 0.2;
-  friction = 0.05;
-  turnFactor = 0.1;
+  maxSpeed = 2;
   wheelBase = this.width;
 
   speed: number = 0;
@@ -20,10 +17,10 @@ export class Car extends Entity {
   brain?: NeuralNetwork;
   movement: Movement;
   constructor(x: number, y: number, terrain: Terrain, isUser: boolean = false) {
-    super(terrain, x, y, 30, 30, 0);
+    super(terrain, x, y, 15, 20, 0);
     this.sensor = new Sensor(this);
     if (!isUser) {
-      this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
+      this.brain = new NeuralNetwork([this.sensor.rayCount + 6, 16, 8, 4]);
     }
     this.movement = new Movement(isUser);
     this.terrain = terrain;
@@ -41,7 +38,16 @@ export class Car extends Entity {
     );
 
     if (this.brain) {
-      const outputs = NeuralNetwork.feedForward(offset, this.brain);
+      const lastMovement: number[] = [
+        this.brain.levels[1].outputs[0],
+        this.brain.levels[1].outputs[2],
+        this.brain.levels[1].outputs[3],
+        this.brain.levels[1].outputs[4],
+      ];
+      const outputs = NeuralNetwork.feedForward(
+        [...offset, ...lastMovement, this.leftSpeed / this.maxSpeed, this.rightSpeed / this.maxSpeed],
+        this.brain
+      );
       this.movement.forward = outputs[0];
       this.movement.left = outputs[1];
       this.movement.right = outputs[2];
@@ -92,10 +98,7 @@ export class Car extends Entity {
     }
   }
   override draw(context: CanvasRenderingContext2D) {
-    if (!this.brain) {
-      this.sensor.draw(context);
-    }
-    context.fillStyle="red"
+    this.sensor.draw(context);
     super.draw(context);
   }
 }

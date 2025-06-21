@@ -5,21 +5,18 @@ import type { Reading } from "@models/reading.js";
 import type { Entity } from "../terrain/entity.js";
 
 export class Sensor {
+  showSensor = true;
   car: Car;
-  rayCount: number = 10;
+  rayCount: number = 3;
   rayLength: number = 200;
-  raySpread: number = Math.PI / 2;
+  raySpread: number = Math.PI / 3;
   rays: Coordinate[][] = [];
   readings: Array<Reading | null> = [];
   constructor(car: Car) {
     this.car = car;
   }
 
-  public update(
-    terrainBorders: Coordinate[],
-    cars: Car[],
-    entities: Entity[]
-  ) {
+  public update(terrainBorders: Coordinate[], cars: Car[], entities: Entity[]) {
     this.readings = [];
     this.castRays();
     this.rays.forEach((r: Coordinate[]) => {
@@ -34,7 +31,9 @@ export class Sensor {
     entities: Entity[]
   ): Reading | null {
     let intersections: Array<Reading | null> = [];
-    intersections.push(...this.handleRayIntersection(ray, terrainBorders, null));
+    intersections.push(
+      ...this.handleRayIntersection(ray, terrainBorders, null)
+    );
     intersections.push(...this.handleRayEntityIntersection(ray, cars));
     intersections.push(...this.handleRayEntityIntersection(ray, entities));
     if (intersections.length == 0) {
@@ -55,16 +54,18 @@ export class Sensor {
         endPoint = this.readings[i];
       }
 
-      context.beginPath();
-      context.lineWidth = 2;
-      context.strokeStyle = "yellow";
-      context.moveTo(this.rays[i][0].x, this.rays[i][0].y);
-      context.lineTo(endPoint!.x, endPoint!.y);
-      context.stroke();
+      if (this.showSensor) {
+        context.beginPath();
+        context.lineWidth = 1;
+        context.strokeStyle = "yellow";
+        context.moveTo(this.rays[i][0].x, this.rays[i][0].y);
+        context.lineTo(endPoint!.x, endPoint!.y);
+        context.stroke();
+      }
 
       context.beginPath();
       context.arc(endPoint!.x, endPoint!.y, 1, 0, Math.PI * 2);
-      context.strokeStyle = "green";
+      context.strokeStyle = "#7CFC00";
       context.stroke();
 
       /* context.beginPath();
@@ -79,9 +80,15 @@ export class Sensor {
   private castRays() {
     this.rays = [];
     for (let i = 0; i < this.rayCount; i++) {
-      const rayAngle =
+      let rayAngle =
         lerp(this.raySpread / 2, -this.raySpread / 2, i / (this.rayCount - 1)) +
         this.car.angle;
+      /*      if (i == 0) {
+        rayAngle += Math.PI;
+      }
+      if (i == this.rayCount - 1) {
+        rayAngle += -Math.PI;
+      } */
 
       const start = { x: this.car.x, y: this.car.y };
       const end = {
