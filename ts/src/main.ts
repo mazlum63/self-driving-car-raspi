@@ -22,7 +22,7 @@ let cars: Car[] = [];
 const userCar = new Car(500, 500, terrain, true);
 cars.push(userCar);
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 200; i++) {
   let newCar = new Car(canvas.width / 2, canvas.height / 2, terrain, false);
   const bestBrain = window.localStorage.getItem("savedCar");
   if (bestBrain) {
@@ -40,7 +40,7 @@ for (let i = 0; i < 20; i++) {
 animate();
 function animate() {
   NeuralNetworkVisualizer.drawNetwork(vcontext, cars[1].brain!)
-  return;
+ // return;
   //if (!isRunning) return;
   context.clearRect(0, 0, canvas.width, canvas.height);
   terrain.draw(context);
