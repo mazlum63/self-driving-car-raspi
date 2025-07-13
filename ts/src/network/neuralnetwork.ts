@@ -1,4 +1,4 @@
-import { lerp } from "./utils/utils";
+import { lerp } from "../utils/utils";
 
 export class NeuralNetwork {
   levels: Level[] = [];
@@ -33,7 +33,7 @@ export class NeuralNetwork {
   }
 }
 
-class Level {
+export class Level {
   inputs: number[] = [];
   outputs: number[] = [];
   weights: number[][] = [];

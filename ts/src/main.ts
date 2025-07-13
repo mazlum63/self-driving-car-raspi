@@ -3,10 +3,15 @@ import { Car } from "./car/car.js";
 import { Terrain } from "./terrain/terrain.js";
 import { Entity } from "./terrain/entity.js";
 import { createEntity, lerp, saveCar } from "./utils/utils.js";
-import { NeuralNetwork } from "./neuralnetwork.js";
+import { NeuralNetwork } from "./network/neuralnetwork.js";
+import { NeuralNetworkVisualizer } from "./network/network-visualizer.js";
 
 const canvas = document.getElementById("simCanvas") as HTMLCanvasElement;
 const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
+
+const vcanvas = document.getElementById("visualizerCanvas") as HTMLCanvasElement;
+const vcontext = vcanvas!.getContext("2d") as CanvasRenderingContext2D;
+
 const pauseBtn = document.getElementById("pause");
 const deleteBtn = document.getElementById("delete");
 let isRunning: boolean = true;
@@ -23,20 +28,20 @@ for (let i = 0; i < 1; i++) {
   if (bestBrain) {
     newCar.brain = JSON.parse(bestBrain);
   }
-  //NeuralNetwork.mutate(newCar.brain!, 0.1);
+  NeuralNetwork.mutate(newCar.brain!, 0.1);
   cars.push(newCar);
 }
 
 const entities: Entity[] = [];
 for (let i = 0; i < 20; i++) {
-  createEntity(lerp(terrain.width-terrain.distance, terrain.distance, Math.random()),lerp(terrain.height-terrain.distance, terrain.distance, Math.random()), terrain, entities);
+  createEntity(lerp(terrain.width - terrain.distance, terrain.distance, Math.random()), lerp(terrain.height - terrain.distance, terrain.distance, Math.random()), terrain, entities);
 }
 
 animate();
-
 function animate() {
-  console.log(cars.length);
-  if (!isRunning) return;
+  NeuralNetworkVisualizer.drawNetwork(vcontext, cars[1].brain!)
+  return;
+  //if (!isRunning) return;
   context.clearRect(0, 0, canvas.width, canvas.height);
   terrain.draw(context);
   cars = cars.filter((c) => !c.touched || !c.brain);

@@ -3,7 +3,7 @@ import { Movement } from "./movement.js";
 import { Sensor } from "./sensor.js";
 import { Terrain } from "../terrain/terrain.js";
 import { Entity } from "../terrain/entity.js";
-import { NeuralNetwork } from "../neuralnetwork.js";
+import { NeuralNetwork } from "../network/neuralnetwork.js";
 
 export class Car extends Entity {
   angle = 0;

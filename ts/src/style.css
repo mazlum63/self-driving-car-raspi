@@ -1,16 +1,17 @@
 * {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
+
 body {
-    margin: 0;
-    background: #ccc;
+  margin: 0;
+  background: #ccc;
 }
 
 canvas {
-    display: block;
-    background: #665235;
-    margin: auto;
+  display: block;
+  background: #665235;
+  margin: auto;
 }
 
 .btn-container {
