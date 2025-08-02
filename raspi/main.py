@@ -46,4 +46,9 @@ net.load_from_json(data)
 inputs = [0, 0, 0.22, 1, 0, 0, 1, 0, 0]
 
 output = net.feed_forward(inputs)
+
+forward=output[0]
+left=output[1]
+right=output[2]
+reverse=output[3]
 print(output)

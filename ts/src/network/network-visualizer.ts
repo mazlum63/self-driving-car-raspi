@@ -48,7 +48,6 @@ export class NeuralNetworkVisualizer {
             const y = (this.distanceBetweenNeurons * (levelLength + 1)) + 11
             context.fillText(emojies[i], x, y)
         }
-        console.log(outputs.length);
 
     }
 }

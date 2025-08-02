@@ -6,6 +6,7 @@ import type { Entity } from "../terrain/entity.js";
 
 export class Sensor {
   showSensor = true;
+  showAfterIntersec = false;
   car: Car;
   rayCount: number = 3;
   rayLength: number = 200;
@@ -68,12 +69,14 @@ export class Sensor {
       context.strokeStyle = "#7CFC00";
       context.stroke();
 
-      /* context.beginPath();
-      context.lineWidth = 2;
-      context.strokeStyle = "black";
-      context.moveTo(this.rays[i][1].x, this.rays[i][1].y);
-      context.lineTo(endPoint!.x, endPoint!.y);
-      context.stroke(); */
+      if (this.showAfterIntersec) {
+        context.beginPath();
+        context.lineWidth = 2;
+        context.strokeStyle = "black";
+        context.moveTo(this.rays[i][1].x, this.rays[i][1].y);
+        context.lineTo(endPoint!.x, endPoint!.y);
+        context.stroke();
+      }
     }
   }
 

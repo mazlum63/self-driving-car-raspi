@@ -38,11 +38,12 @@ export class Car extends Entity {
     );
 
     if (this.brain) {
+      const lastLevel= this.brain.levels.length-1;
       const lastMovement: number[] = [
-        this.brain.levels[1].outputs[0],
-        this.brain.levels[1].outputs[2],
-        this.brain.levels[1].outputs[3],
-        this.brain.levels[1].outputs[4],
+        this.brain.levels[lastLevel].outputs[0],
+        this.brain.levels[lastLevel].outputs[1],
+        this.brain.levels[lastLevel].outputs[2],
+        this.brain.levels[lastLevel].outputs[3],
       ];
       const outputs = NeuralNetwork.feedForward(
         [...offset, ...lastMovement, this.leftSpeed / this.maxSpeed, this.rightSpeed / this.maxSpeed],
