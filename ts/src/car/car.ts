@@ -38,7 +38,7 @@ export class Car extends Entity {
     );
 
     if (this.brain) {
-      const lastLevel= this.brain.levels.length-1;
+      const lastLevel = this.brain.levels.length - 1;
       const lastMovement: number[] = [
         this.brain.levels[lastLevel].outputs[0],
         this.brain.levels[lastLevel].outputs[1],
@@ -46,13 +46,36 @@ export class Car extends Entity {
         this.brain.levels[lastLevel].outputs[3],
       ];
       const outputs = NeuralNetwork.feedForward(
-        [...offset, ...lastMovement, this.leftSpeed / this.maxSpeed, this.rightSpeed / this.maxSpeed],
+        [
+          ...offset,
+          ...lastMovement,
+          this.leftSpeed / this.maxSpeed,
+          this.rightSpeed / this.maxSpeed,
+        ],
         this.brain
       );
       this.movement.forward = outputs[0];
       this.movement.left = outputs[1];
       this.movement.right = outputs[2];
       this.movement.reverse = outputs[3];
+
+      if (outputs[0] && !outputs[1]) {
+        this.movement.leftWheel = true;
+      } else if (!outputs[0] && outputs[1]) {
+        this.movement.leftWheel = false;
+      } else {
+        this.movement.leftWheel = null;
+      }
+
+
+      
+      if (outputs[2] && !outputs[3]) {
+        this.movement.rightWheel = true;
+      } else if (!outputs[2] && outputs[2]) {
+        this.movement.rightWheel = false;
+      } else {
+        this.movement.rightWheel = null;
+      }
     }
     super.update(terrainBorders, cars, entities);
   }
@@ -61,23 +84,39 @@ export class Car extends Entity {
     this.leftSpeed = 0;
     this.rightSpeed = 0;
 
-    if (this.movement.forward) {
+    // if (this.movement.forward) {
+    //   this.leftSpeed = -this.maxSpeed;
+    //   this.rightSpeed = -this.maxSpeed;
+    // }
+
+    // if (this.movement.reverse) {
+    //   this.leftSpeed = this.maxSpeed;
+    //   this.rightSpeed = this.maxSpeed;
+    // }
+
+    // if (this.movement.left) {
+    //   this.leftSpeed = 0;
+    //   this.rightSpeed = this.maxSpeed;
+    // }
+
+    // if (this.movement.right) {
+    //   this.leftSpeed = this.maxSpeed;
+    //   this.rightSpeed = 0;
+    // }
+
+    if (this.movement.leftWheel == true) {
       this.leftSpeed = -this.maxSpeed;
-      this.rightSpeed = -this.maxSpeed;
-    }
-
-    if (this.movement.reverse) {
-      this.leftSpeed = this.maxSpeed;
-      this.rightSpeed = this.maxSpeed;
-    }
-
-    if (this.movement.left) {
+    } else if (this.movement.leftWheel == false) {
+      this.leftSpeed = -this.maxSpeed;
+    } else {
       this.leftSpeed = 0;
-      this.rightSpeed = this.maxSpeed;
     }
 
-    if (this.movement.right) {
-      this.leftSpeed = this.maxSpeed;
+    if (this.movement.rightWheel == true) {
+      this.rightSpeed = -this.maxSpeed;
+    } else if (this.movement.rightWheel == false) {
+      this.rightSpeed = -this.maxSpeed;
+    } else {
       this.rightSpeed = 0;
     }
 

@@ -29,7 +29,7 @@ for (let i = 0; i < 222; i++) {
   const bestBrain = window.localStorage.getItem("savedCar");
   if (bestBrain) {
     newCar.brain = JSON.parse(bestBrain);
-    NeuralNetwork.mutate(newCar.brain!, 0.051);
+    NeuralNetwork.mutate(newCar.brain!, 0.1);
   }
   cars.push(newCar);
 }

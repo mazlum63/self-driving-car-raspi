@@ -3,6 +3,13 @@ export class Movement {
   left: boolean = false;
   right: boolean = false;
   reverse: boolean = false;
+
+
+
+  leftWheel:boolean | null =null;
+  rightWheel:boolean | null =null;
+
+
   constructor(isUser: boolean = false) {
     if (isUser) {
       this.addKeyboardListeners();
