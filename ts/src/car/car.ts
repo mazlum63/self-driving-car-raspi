@@ -9,7 +9,7 @@ export class Car extends Entity {
   angle = 0;
   leftSpeed = 0;
   rightSpeed = 0;
-  maxSpeed = 2;
+  maxSpeed = 1;
   wheelBase = this.width;
 
   speed: number = 0;
@@ -32,7 +32,7 @@ export class Car extends Entity {
     entities: Entity[]
   ) {
     this.move();
-    this.sensor.update(terrainBorders, cars, entities);
+    this.sensor.update(terrainBorders, cars, entities); // Comment out this line and the animation function in main.js if you want your car to decide and move on its own for a while.
     let offset = this.sensor.readings.map((r) =>
       r == null ? 0 : 1 - r.offset
     );
@@ -71,7 +71,7 @@ export class Car extends Entity {
       
       if (outputs[2] && !outputs[3]) {
         this.movement.rightWheel = true;
-      } else if (!outputs[2] && outputs[2]) {
+      } else if (!outputs[2] && outputs[3]) {
         this.movement.rightWheel = false;
       } else {
         this.movement.rightWheel = null;
@@ -83,26 +83,6 @@ export class Car extends Entity {
   private move() {
     this.leftSpeed = 0;
     this.rightSpeed = 0;
-
-    // if (this.movement.forward) {
-    //   this.leftSpeed = -this.maxSpeed;
-    //   this.rightSpeed = -this.maxSpeed;
-    // }
-
-    // if (this.movement.reverse) {
-    //   this.leftSpeed = this.maxSpeed;
-    //   this.rightSpeed = this.maxSpeed;
-    // }
-
-    // if (this.movement.left) {
-    //   this.leftSpeed = 0;
-    //   this.rightSpeed = this.maxSpeed;
-    // }
-
-    // if (this.movement.right) {
-    //   this.leftSpeed = this.maxSpeed;
-    //   this.rightSpeed = 0;
-    // }
 
     if (this.movement.leftWheel == true) {
       this.leftSpeed = -this.maxSpeed;

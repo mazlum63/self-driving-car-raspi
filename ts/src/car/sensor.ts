@@ -55,7 +55,7 @@ export class Sensor {
         endPoint = this.readings[i];
       }
 
-      if (this.showSensor) {
+      if (this.showSensor && i == 1) {
         context.beginPath();
         context.lineWidth = 1;
         context.strokeStyle = "yellow";

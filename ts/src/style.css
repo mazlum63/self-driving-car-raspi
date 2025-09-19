@@ -17,8 +17,8 @@ canvas {
 .btn-container {
   position: absolute;
   top: 30px;
-  left: 30px;
-  display: flex;
+  left: 100px;
+  display: none;
   flex-direction: column;
 }
 
@@ -29,4 +29,30 @@ button {
   display: inline;
   max-width: 70px;
   font-size: 2rem;
+}
+
+#btn {
+  padding: 10px 14px;
+  background: #0366d6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+
+.menu a {
+  display: block;
+  padding: 8px;
+  color: #333;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background: #eee;
 }
