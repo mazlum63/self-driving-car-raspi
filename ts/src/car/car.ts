@@ -54,24 +54,19 @@ export class Car extends Entity {
         ],
         this.brain
       );
-      this.movement.forward = outputs[0];
-      this.movement.left = outputs[1];
-      this.movement.right = outputs[2];
-      this.movement.reverse = outputs[3];
-
+      // output[0] left forward, output[1] left reverse,
+      // output[2] right forward, output[3] right reverse,
       if (outputs[0] && !outputs[1]) {
         this.movement.leftWheel = true;
-      } else if (!outputs[0] && outputs[1]) {
+      } else if (outputs[1] && !outputs[0]) {
         this.movement.leftWheel = false;
       } else {
         this.movement.leftWheel = null;
       }
 
-
-      
       if (outputs[2] && !outputs[3]) {
         this.movement.rightWheel = true;
-      } else if (!outputs[2] && outputs[3]) {
+      } else if (outputs[3] && !outputs[2]) {
         this.movement.rightWheel = false;
       } else {
         this.movement.rightWheel = null;
@@ -87,7 +82,7 @@ export class Car extends Entity {
     if (this.movement.leftWheel == true) {
       this.leftSpeed = -this.maxSpeed;
     } else if (this.movement.leftWheel == false) {
-      this.leftSpeed = -this.maxSpeed;
+      this.leftSpeed = this.maxSpeed;
     } else {
       this.leftSpeed = 0;
     }
@@ -95,7 +90,7 @@ export class Car extends Entity {
     if (this.movement.rightWheel == true) {
       this.rightSpeed = -this.maxSpeed;
     } else if (this.movement.rightWheel == false) {
-      this.rightSpeed = -this.maxSpeed;
+      this.rightSpeed = this.maxSpeed;
     } else {
       this.rightSpeed = 0;
     }

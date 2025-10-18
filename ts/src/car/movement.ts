@@ -1,14 +1,6 @@
 export class Movement {
-  forward: boolean = false;
-  left: boolean = false;
-  right: boolean = false;
-  reverse: boolean = false;
-
-
-
-  leftWheel:boolean | null =null;
-  rightWheel:boolean | null =null;
-
+  leftWheel: boolean | null = null;
+  rightWheel: boolean | null = null;
 
   constructor(isUser: boolean = false) {
     if (isUser) {
@@ -20,16 +12,20 @@ export class Movement {
     document.onkeydown = (event: KeyboardEvent) => {
       switch (event.key) {
         case "a":
-          this.left = true;
+          this.leftWheel = true;
+          this.rightWheel = false;
           break;
         case "d":
-          this.right = true;
+          this.leftWheel = false;
+          this.rightWheel = true;
           break;
         case "w":
-          this.forward = true;
+          this.leftWheel = true;
+          this.rightWheel = true;
           break;
         case "s":
-          this.reverse = true;
+          this.leftWheel = false;
+          this.rightWheel = false;
           break;
       }
     };
@@ -37,16 +33,20 @@ export class Movement {
     document.onkeyup = (event: KeyboardEvent) => {
       switch (event.key) {
         case "a":
-          this.left = false;
+          this.leftWheel = null;
+          this.rightWheel = null;
           break;
         case "d":
-          this.right = false;
+          this.leftWheel = null;
+          this.rightWheel = null;
           break;
         case "w":
-          this.forward = false;
+          this.leftWheel = null;
+          this.rightWheel = null;
           break;
         case "s":
-          this.reverse = false;
+          this.leftWheel = null;
+          this.rightWheel = null;
           break;
       }
     };

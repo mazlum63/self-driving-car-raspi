@@ -93,7 +93,12 @@ export class Sensor {
         rayAngle += -Math.PI;
       } */
 
-      const start = { x: this.car.x, y: this.car.y };
+      //const start = { x: this.car.x, y: this.car.y };
+
+       const start = {
+        x: this.car.x - Math.sin(rayAngle) * (this.rayLength-190),
+        y: this.car.y - Math.cos(rayAngle) * (this.rayLength-190),
+      };
       const end = {
         x: this.car.x - Math.sin(rayAngle) * this.rayLength,
         y: this.car.y - Math.cos(rayAngle) * this.rayLength,
