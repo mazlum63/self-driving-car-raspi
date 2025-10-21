@@ -103,7 +103,7 @@ def update_motors(output):
 with open("bestBrain-three-sensor.json") as f:
     model_data = json.load(f)
 
-net = NeuralNetwork([9, 16, 8, 4])
+net = NeuralNetwork([7, 16, 8, 4])
 net.load_from_json(model_data)
 
 try:
@@ -115,7 +115,7 @@ try:
             for s in sensors
         ]
 
-        nn_input = sensor_distances + last_outputs + [0.0, 0.0]
+        nn_input = sensor_distances + last_outputs
         output = net.feed_forward(nn_input)
         last_outputs = [1.0 if o else 0.0 for o in output[:4]]
         print("AI Command:", last_outputs)
