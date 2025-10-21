@@ -20,7 +20,7 @@ export class Car extends Entity {
     super(terrain, x, y, 15, 20, 0);
     this.sensor = new Sensor(this);
     if (!isUser) {
-      this.brain = new NeuralNetwork([this.sensor.rayCount + 6, 16, 8, 4]);
+      this.brain = new NeuralNetwork([this.sensor.rayCount + 4, 16, 8, 4]);
     }
     this.movement = new Movement(isUser);
     this.terrain = terrain;
@@ -48,9 +48,7 @@ export class Car extends Entity {
       const outputs = NeuralNetwork.feedForward(
         [
           ...offset,
-          ...lastMovement,
-          this.leftSpeed / this.maxSpeed,
-          this.rightSpeed / this.maxSpeed,
+          ...lastMovement
         ],
         this.brain
       );
