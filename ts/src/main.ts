@@ -9,7 +9,7 @@ import type { Coordinate } from "@models/coordinate.js";
 const canvas = document.getElementById("simCanvas") as HTMLCanvasElement;
 const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
 
-const isSingle: boolean = false;
+const isSingle: boolean = true;
 
 const pauseBtn = document.getElementById("pause");
 const deleteBtn = document.getElementById("delete");
@@ -21,20 +21,20 @@ let cars: Car[] = [];
 const userCar = new Car(500, 500, terrain, true);
 cars.push(userCar);
 
-for (let i = 0; i < (isSingle ? 1 : 100); i++) {
+for (let i = 0; i < (isSingle ? 1 : 1000); i++) {
   let newCar = new Car(canvas.width / 2, canvas.height / 2, terrain, false);
   const bestBrain = window.localStorage.getItem("savedCar");
   if (bestBrain) {
     newCar.brain = JSON.parse(bestBrain);
     if (!isSingle) {
-      NeuralNetwork.mutate(newCar.brain!, 0.05);
+      NeuralNetwork.mutate(newCar.brain!, 0.1);
     }
   }
   cars.push(newCar);
 }
 
 const entities: Entity[] = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 50; i++) {
   createEntity(
     lerp(terrain.width - terrain.distance, terrain.distance, Math.random()),
     lerp(terrain.height - terrain.distance, terrain.distance, Math.random()),

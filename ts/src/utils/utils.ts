@@ -81,7 +81,7 @@ export function saveCar(event: PointerEvent, cars: Car[]) {
       );
       if (touch) {
         localStorage.setItem("savedCar", JSON.stringify(car.brain));
-        downloadJsonFile(car.brain, "bestBrain");
+        //downloadJsonFile(car.brain, "bestBrain");
       }
     }
   }

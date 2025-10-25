@@ -46,10 +46,7 @@ export class Car extends Entity {
         this.brain.levels[lastLevel].outputs[3],
       ];
       const outputs = NeuralNetwork.feedForward(
-        [
-          ...offset,
-          ...lastMovement
-        ],
+        [...offset, ...lastMovement],
         this.brain
       );
       // output[0] left forward, output[1] left reverse,
@@ -94,7 +91,7 @@ export class Car extends Entity {
     }
 
     const speed = (this.leftSpeed + this.rightSpeed) / 2;
-    const rotation = (this.rightSpeed - this.leftSpeed) / this.wheelBase;
+    const rotation = (this.rightSpeed - this.leftSpeed) / (this.wheelBase * 10);
 
     this.angle += rotation;
 

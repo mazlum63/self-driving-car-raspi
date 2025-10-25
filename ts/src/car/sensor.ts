@@ -5,7 +5,7 @@ import type { Reading } from "@models/reading.js";
 import type { Entity } from "../terrain/entity.js";
 
 export class Sensor {
-  showSensor = true;
+  sensorType: "one" | "all" | "points" | "none" = "one";
   showAfterIntersec = false;
   car: Car;
   rayCount: number = 3;
@@ -55,23 +55,45 @@ export class Sensor {
         endPoint = this.readings[i];
       }
 
-      if (this.showSensor && i == 1) {
-        context.beginPath();
-        context.lineWidth = 1;
-        context.strokeStyle = "yellow";
-        context.moveTo(this.rays[i][0].x, this.rays[i][0].y);
-        context.lineTo(endPoint!.x, endPoint!.y);
-        context.stroke();
-      }
-
       context.beginPath();
-      context.arc(endPoint!.x, endPoint!.y, 1, 0, Math.PI * 2);
-      context.strokeStyle = "#7CFC00";
-      context.stroke();
+      context.lineWidth = 1;
+      if (this.sensorType != "none") {
+        context.strokeStyle = "#7CFC00";
+        context.arc(endPoint!.x, endPoint!.y, 1, 0, Math.PI * 2);
+        context.stroke();
 
+        context.beginPath();
+        if (this.sensorType == "one" && i == 1) {
+          context.strokeStyle = "yellow";
+          context.moveTo(this.rays[i][0].x, this.rays[i][0].y);
+          context.lineTo(endPoint!.x, endPoint!.y);
+        } else if (this.sensorType == "all") {
+          context.strokeStyle = "yellow";
+          context.moveTo(this.rays[i][0].x, this.rays[i][0].y);
+          context.lineTo(endPoint!.x, endPoint!.y);
+        }
+      } else {
+        if (i == 1) {
+          let rayAngle =
+            lerp(
+              this.raySpread / 2,
+              -this.raySpread / 2,
+              i / (this.rayCount - 1)
+            ) + this.car.angle;
+          context.strokeStyle = "yellow";
+          context.moveTo(
+            this.rays[i][0].x - Math.sin(rayAngle),
+            this.rays[i][0].y - Math.cos(rayAngle)
+          );
+          context.lineTo(
+            this.rays[i][0].x - Math.sin(rayAngle) * 20,
+            this.rays[i][0].y - Math.cos(rayAngle) * 20
+          );
+        }
+      }
+      context.stroke();
       if (this.showAfterIntersec) {
         context.beginPath();
-        context.lineWidth = 2;
         context.strokeStyle = "black";
         context.moveTo(this.rays[i][1].x, this.rays[i][1].y);
         context.lineTo(endPoint!.x, endPoint!.y);
@@ -95,9 +117,9 @@ export class Sensor {
 
       //const start = { x: this.car.x, y: this.car.y };
 
-       const start = {
-        x: this.car.x - Math.sin(rayAngle) * (this.rayLength-190),
-        y: this.car.y - Math.cos(rayAngle) * (this.rayLength-190),
+      const start = {
+        x: this.car.x - Math.sin(rayAngle) * (this.rayLength - 190),
+        y: this.car.y - Math.cos(rayAngle) * (this.rayLength - 190),
       };
       const end = {
         x: this.car.x - Math.sin(rayAngle) * this.rayLength,
